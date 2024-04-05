@@ -7,7 +7,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
 mongoose.connect('mongodb://localhost:27017/specialList',{
     useNewUrlParser:true,
@@ -52,14 +52,37 @@ app.get('/updating', async(req, res) => {
     const destination = req.query.goal;
     console.log(`My Id : ${id} and Target : ${destination}`)
     try{
-        // const myGoals = await 
-        res.json({message:"Alhamdulila! Doing Good"})
+        const myGoals = await listModel.findOne({id});
+        if(myGoals){
+            await listModel.updateOne({id : id}, {value:destination});
+            const NewData = await listModel.find({});
+            // res.json("Updated List: ", NewData);
+            res.json({ message: "Updated "});
+        }
+        else{
+            res.json({message:"Alhamdulila! Doing Good"})
+        }
+        
     }
     catch(err) {
         res.status(500).json({err:err.message})
     }
 })
 
+
+// app.put('/api/updating/id', async(req,res) => {
+//     try{
+//         const goal = await listModel.findOne({id});
+//         // if(goal)
+//         console.log("id: ", id);
+//         res.json({message:"Successfully run UPdating function "})
+//     }
+//     catch(err){
+//         res.status(500).json({err:err.message})
+//     }
+// })
+
+ 
 app.post('/addList', async(req, res) => {
     // console.log("req.body: ", req.body);
     const desire = req.body;

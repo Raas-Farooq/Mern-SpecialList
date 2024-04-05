@@ -44,10 +44,27 @@ list.addEventListener("click", e => {
             console.log('your goal under Edit: ', desire);
             console.log('specialId under Edit: ', specialId);
 
-            fetch(`http://localhost:3000/updating?goal=${desire}&&id=${specialId}`).then(response => response.json()).then
-            (data => {
-                console.log("I Got the Data: ", data);
-            }).catch(err =>  console.log("This is My Error: ", err))
+                //     fetch(`http://localhost:3001/updating?goal=${desire}&&id=${specialId}`).then(response => response.json()).then
+                //     (data => {
+                //         console.log("I Got the Data: ", data);
+                //     }).catch(err =>  console.log("This is My Error: ", err))
+                //     text.value = '';
+                //     desire = '';
+                //     editing = false
+                // }
+            const value = {
+                value:desire
+            };
+
+            fetch('http://localhost:3001/updating/specialId',{
+                method:'PUT',
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify(value)
+            }).then(response => response.json()).then
+            (data => console.log("here is your data: ", data)).
+            catch(err => console.log("Work On Your Weaknesses: ", err));
             text.value = '';
             desire = '';
             editing = false
@@ -60,7 +77,7 @@ list.addEventListener("click", e => {
     
         // console.log('your Keys: ', desire);
         if(!desire){
-            alert("Enter Your Desire/Destination")
+            alert("Enter Your Desire/Destination");
         }
         else{
             console.log("INside The Add Click");
@@ -73,7 +90,7 @@ list.addEventListener("click", e => {
             value: desire
         }];
     
-        fetch('http://localhost:3000/addList',{
+        fetch('http://localhost:3001/addList',{
             
             method:'POST',
             headers:{
@@ -93,16 +110,17 @@ list.addEventListener("click", e => {
     else if(e.target.classList.contains('del'))
     {
         const item = e.target.parentElement;
+        const itemId = item.id;
         console.log("item to be delted: ", item);
         list.removeChild(item);
-
+        // fetch('http://localhost:3001/delete?del = ')
         console.log('your Keys: ', desire);
     }
 
 })
 
 document.addEventListener('DOMContentLoaded', e => {
-    fetch('http://localhost:3000/load').then(response => response.json()).
+    fetch('http://localhost:3001/load').then(response => response.json()).
     then(data => {
         console.log("Ar Rehman: ", data);
         data.forEach(item => creatingElement(item.id, item.value));
