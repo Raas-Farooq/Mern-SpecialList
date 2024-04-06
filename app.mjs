@@ -46,41 +46,53 @@ app.get('/load', async(req, res) => {
     }
 })
 
-app.get('/updating', async(req, res) => {
+// app.get('/updating', async(req, res) => {
     
-    const id = req.query.id;
-    const destination = req.query.goal;
-    console.log(`My Id : ${id} and Target : ${destination}`)
-    try{
-        const myGoals = await listModel.findOne({id});
-        if(myGoals){
-            await listModel.updateOne({id : id}, {value:destination});
-            const NewData = await listModel.find({});
-            // res.json("Updated List: ", NewData);
-            res.json({ message: "Updated "});
-        }
-        else{
-            res.json({message:"Alhamdulila! Doing Good"})
-        }
-        
-    }
-    catch(err) {
-        res.status(500).json({err:err.message})
-    }
-})
-
-
-// app.put('/api/updating/id', async(req,res) => {
+//     const id = req.query.id;
+//     const destination = req.query.goal;
+//     console.log(`My Id : ${id} and Target : ${destination}`)
 //     try{
-//         const goal = await listModel.findOne({id});
-//         // if(goal)
-//         console.log("id: ", id);
-//         res.json({message:"Successfully run UPdating function "})
+//         const myGoals = await listModel.findOne({id});
+//         if(myGoals){
+//             await listModel.updateOne({id : id}, {value:destination});
+//             const NewData = await listModel.find({});
+//             // res.json("Updated List: ", NewData);
+//             res.json({ message: "Updated "});
+//         }
+//         else{
+//             res.json({message:"Alhamdulila! Doing Good"})
+//         }
+        
 //     }
-//     catch(err){
+//     catch(err) {
 //         res.status(500).json({err:err.message})
 //     }
 // })
+
+
+app.put('/updating/:specialId', async(req,res) => {
+    try{
+        const newId = req.params.specialId;
+        const body = req.body;
+        const val = body.value;
+        console.log("newid: ", newId);
+        const allgoal = await listModel.find({});
+        console.log("allGoals: ", allgoal);
+        const goal = await listModel.findOne({id:newId});
+        console.log("GoaL: ", goal);
+        if(goal){
+            await listModel.updateOne({id:newId}, {value: val})
+            res.json({message:"Successfully run UPdating function "})
+        }
+      else{
+        res.json({message:"Id Not Found"})
+      }
+        
+    }
+    catch(err){
+        res.status(500).json({err:err.message})
+    }
+})
 
  
 app.post('/addList', async(req, res) => {
@@ -107,5 +119,22 @@ app.post('/addList', async(req, res) => {
     }
 })
 
-
+app.delete('/deleting/:id', async (req,res) => {
+    try{
+        const id = req.params.id;
+        const destination = await listModel.findOne({id});
+        console.log("destination", destination);
+        if(destination){
+            await listModel.deleteOne({id});
+            res.json({message:"Deleted Great"})
+        }
+        else{
+            res.json({message:"Item is NOt There"})
+        }
+        
+    }
+    catch(err){
+        res.status(500).json({err:err.message});
+    }
+})
 app.listen(port, () => console.log("Alhamdulila for EveryThing!" + port))

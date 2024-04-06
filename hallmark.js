@@ -52,11 +52,14 @@ list.addEventListener("click", e => {
                 //     desire = '';
                 //     editing = false
                 // }
+
+
+
             const value = {
                 value:desire
             };
 
-            fetch('http://localhost:3001/updating/specialId',{
+            fetch(`http://localhost:3001/updating/${specialId}`,{
                 method:'PUT',
                 headers:{
                     "Content-Type":"application/json"
@@ -113,7 +116,12 @@ list.addEventListener("click", e => {
         const itemId = item.id;
         console.log("item to be delted: ", item);
         list.removeChild(item);
-        // fetch('http://localhost:3001/delete?del = ')
+        fetch(`http://localhost:3001/deleting/${itemId}`,{
+            method:'DELETE' 
+        }).then
+        (response =>response.json()).then
+        (data => console.log("get YOur Reward:  ", data)).
+        catch(err => console.log("Eres are always there: ", err));
         console.log('your Keys: ', desire);
     }
 
