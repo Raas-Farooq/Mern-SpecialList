@@ -22,7 +22,7 @@ const listSchema = new mongoose.Schema({
 })
 
 const listModel = mongoose.model('listModel', listSchema);
-
+// on Document Load
 app.get('/load', async(req, res) => {
     
     try{
@@ -46,79 +46,44 @@ app.get('/load', async(req, res) => {
     }
 })
 
-// app.get('/updating', async(req, res) => {
-    
-//     const id = req.query.id;
-//     const destination = req.query.goal;
-//     console.log(`My Id : ${id} and Target : ${destination}`)
-//     try{
-//         const myGoals = await listModel.findOne({id});
-//         if(myGoals){
-//             await listModel.updateOne({id : id}, {value:destination});
-//             const NewData = await listModel.find({});
-//             // res.json("Updated List: ", NewData);
-//             res.json({ message: "Updated "});
-//         }
-//         else{
-//             res.json({message:"Alhamdulila! Doing Good"})
-//         }
-        
-//     }
-//     catch(err) {
-//         res.status(500).json({err:err.message})
-//     }
-// })
 
-
-app.put('/updating/:specialId', async(req,res) => {
+// Editing the Item
+app.put('/updating/:myId', async (req,res) => {
     try{
-        const newId = req.params.specialId;
-        const body = req.body;
-        const val = body.value;
-        console.log("newid: ", newId);
-        const allgoal = await listModel.find({});
-        console.log("allGoals: ", allgoal);
-        const goal = await listModel.findOne({id:newId});
-        console.log("GoaL: ", goal);
-        if(goal){
-            await listModel.updateOne({id:newId}, {value: val})
-            res.json({message:"Successfully run UPdating function "})
-        }
-      else{
-        res.json({message:"Id Not Found"})
-      }
-        
-    }
-    catch(err){
-        res.status(500).json({err:err.message})
-    }
-})
-
- 
-app.post('/addList', async(req, res) => {
-    // console.log("req.body: ", req.body);
-    const desire = req.body;
-    const id = desire[0].id;
-    console.log("Id: ", id);
-    console.log("desire Message: ", desire);
-    
-    try{
-        const exist = await listModel.find({id})
-        console.log("exist: ", exist);
-        if(exist.length === 0){
-            await listModel.create(desire);
-            res.json({message: "Success"});
+        const myId = req.params.myId;
+        const val = req.body.value;
+        console.log("myId: ", myId);
+        console.log("val: ", val);
+        const findTarget = await listModel.findOne({id:myId});
+        console.log("findTarget: ", findTarget);
+        if(findTarget){
+            await listModel.updateOne({id:myId}, {value:val});
+            res.json({message:"accomplished Target"})
         }
         else{
-            res.json({message: "Already There"})
+            res.json({message:"Id Not Found"})
         }
-
     }
     catch(err){
         res.status(500).json({err:err.message});
     }
 })
 
+// Adding new Item
+app.post('/addList', async (req,res) => {
+    try{
+        const myData = req.body;
+        console.log("myData ", myData);
+        await listModel.create(myData);
+        res.json({message:"Go peacefully"})
+    }
+    catch(err){
+        res.status(500).json({err:err.message})
+    }
+})
+
+
+//Deleting The Item
 app.delete('/deleting/:id', async (req,res) => {
     try{
         const id = req.params.id;

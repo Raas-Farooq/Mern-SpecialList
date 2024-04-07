@@ -23,12 +23,13 @@ list.addEventListener("click", e => {
     if(e.target.classList.contains('edit')){
         editing = true;
         specialId = e.target.parentElement.id;
-        console.log('parent', e.target.previousSibling.textContent);
-        console.log('targer', e.target);
+        desire =  e.target.previousSibling.textContent;
+        console.log('desire  iin  edit', desire);
         
         text.value = e.target.previousSibling.textContent;
     }
     else if(e.target.classList.contains('add') && editing){
+        console.log("desire in editing: ", desire);
         if(!desire){
             alert("Enter Your Desire/Destination")
         }
@@ -44,14 +45,15 @@ list.addEventListener("click", e => {
             console.log('your goal under Edit: ', desire);
             console.log('specialId under Edit: ', specialId);
 
-                //     fetch(`http://localhost:3001/updating?goal=${desire}&&id=${specialId}`).then(response => response.json()).then
-                //     (data => {
-                //         console.log("I Got the Data: ", data);
-                //     }).catch(err =>  console.log("This is My Error: ", err))
-                //     text.value = '';
-                //     desire = '';
-                //     editing = false
-                // }
+            //     Second method
+            //     fetch(`http://localhost:3001/updating?goal=${desire}&&id=${specialId}`).then(response => response.json()).then
+            //     (data => {
+            //         console.log("I Got the Data: ", data);
+            //     }).catch(err =>  console.log("This is My Error: ", err))
+            //     text.value = '';
+            //     desire = '';
+            //     editing = false
+            // }
 
 
 
@@ -76,9 +78,6 @@ list.addEventListener("click", e => {
     else if(e.target.classList.contains('add') && !editing){
         
         console.log('LIst: ', list);
-        // editing = true;
-    
-        // console.log('your Keys: ', desire);
         if(!desire){
             alert("Enter Your Desire/Destination");
         }
@@ -86,29 +85,24 @@ list.addEventListener("click", e => {
             console.log("INside The Add Click");
             const myId = new Date().getTime().toString();
             creatingElement(myId,desire);
-    
-        const message=[
-        {
-            id: myId,
-            value: desire
-        }];
-    
+        data = [
+            {
+                id:myId,
+                value:desire
+            }
+        ]
         fetch('http://localhost:3001/addList',{
-            
-            method:'POST',
+            method:"POST",
             headers:{
-                "Content-Type": "application/json",
+                "Content-Type":"application/json"
             },
-            body:JSON.stringify(message)
-            }).then(response => response.json()).then(
-                data => {
-                    console.log("Show me Something Incredible: ", data);
-                }
-            ).catch(err => console.log("are You Ready For Utmost Effort: ", err))
-            text.value = '';
-    
+            body:JSON.stringify(data)
+        }).then
+        (response =>response.json()).then
+        (data => console.log("get YOur Reward:  ", data)).
+        catch(err => console.log("Eres are always there: ", err));
+        text.value = '';
         }
-
     }
     else if(e.target.classList.contains('del'))
     {
@@ -135,39 +129,6 @@ document.addEventListener('DOMContentLoaded', e => {
     }).catch(err => console.log ("Be Deliberatee: ", err))
 })
 
-
-// addBtn.addEventListener("click", e => {
-//     if(!desire){
-//         alert("Enter Your Desire/Destination")
-//     }
-//     else{
-//         console.log("I have also run");
-//         const myId = new Date().getTime().toString();
-//         creatingElement(myId,desire);
-
-//     const message=[
-//     {
-//         id: myId,
-//         value: desire
-//     }];
-
-//     fetch('http://localhost:3000/addList',{
-        
-//         method:'POST',
-//         headers:{
-//             "Content-Type": "application/json",
-//         },
-//         body:JSON.stringify(message)
-//         }).then(response => response.json()).then(
-//             data => {
-//                 console.log("Show me Something Incredible: ", data);
-//             }
-//         ).catch(err => console.log("are You Ready For Utmost Effort: ", err))
-//         text.value = '';
-
-//     }
-    
-// })
 
 const creatingElement = (id, value) => {
     const div = document.createElement('div');
